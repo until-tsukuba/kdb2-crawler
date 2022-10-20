@@ -1,4 +1,4 @@
-module github.com/eniehack/kdb2
+module github.com/eniehack/kdb2-crawler
 
 go 1.19
 
