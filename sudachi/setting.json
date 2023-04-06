@@ -1,0 +1,29 @@
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "tokenizer": {
+          "sudachi_tokenizer": {
+            "type": "sudachi_tokenizer",
+            "split_mode": "C",
+            "discard_punctuation": true,
+            "resources_path": "/etc/elasticsearch/sudachi"
+          }
+        },
+        "analyzer": {
+          "sudachi_analyzer": {
+            "filter": ["kdb2_searchfilter"],
+            "tokenizer": "sudachi_tokenizer",
+            "type": "custom"
+          }
+        },
+        "filter": {
+            "kdb2_searchfilter": {
+                "type": "sudachi_split",
+                "mode": "search"
+            }
+        }
+      }
+    }
+  }
+}
