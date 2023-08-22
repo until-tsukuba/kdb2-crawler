@@ -1,0 +1,23 @@
+{
+    "mappings": {
+	    "properties": {
+		    "courseID": { "type": "keyword" },
+		    "title": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "credit": { "type": "float" },
+		    "minGrade": { "type": "integer" },
+		    "timetable": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "books": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "className": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "planPretopics": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "keywords": { "type": "text", "analyzer": "sudachi_analyzer" },
+		    "seeAlsoSubject": {
+		    	"type": "nested",
+		    	"properties": {
+		    		"CourseID": { "type": "keyword" },
+		    		"Title": { "type": "text", "analyzer": "sudachi_analyzer" }
+		    	}
+		    },
+		    "summary": { "type": "text", "analyzer": "sudachi_analyzer" }
+	    }
+    }
+}
