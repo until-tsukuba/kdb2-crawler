@@ -1,23 +1,48 @@
 {
-    "mappings": {
-	    "properties": {
-		    "courseID": { "type": "keyword" },
-		    "title": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "credit": { "type": "float" },
-		    "minGrade": { "type": "integer" },
-		    "timetable": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "books": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "className": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "planPretopics": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "keywords": { "type": "text", "analyzer": "sudachi_analyzer" },
-		    "seeAlsoSubject": {
-		    	"type": "nested",
-		    	"properties": {
-		    		"CourseID": { "type": "keyword" },
-		    		"Title": { "type": "text", "analyzer": "sudachi_analyzer" }
-		    	}
-		    },
-		    "summary": { "type": "text", "analyzer": "sudachi_analyzer" }
-	    }
-    }
+	"settings": {
+		"index": {
+		  	"analysis": {
+				"tokenizer": {
+			  		"sudachi_tokenizer": {
+						"type": "sudachi_tokenizer",
+						"resources_path": "/etc/elasticsearch/sudachi"
+			  		}
+				},
+				"analyzer": {
+				  	"sudachi_analyzer": {
+						"filter": [],
+						"tokenizer": "sudachi_tokenizer",
+						"type": "custom"
+				  	}
+				},
+				"filter": {
+					"searchfilter": {
+						"type": "sudachi_split",
+						"mode": "search"
+			  		}
+				}
+		  	}
+		}
+	},
+	"mappings": {
+		"properties": {
+			"courseID": { "type": "keyword" },
+			"title": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"credit": { "type": "float" },
+			"minGrade": { "type": "integer" },
+			"timetable": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"books": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"className": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"planPretopics": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"keywords": { "type": "text", "analyzer": "sudachi_analyzer" },
+			"seeAlsoSubject": {
+				"type": "nested",
+				"properties": {
+					"CourseID": { "type": "keyword" },
+					"Title": { "type": "text", "analyzer": "sudachi_analyzer" }
+				}
+			},
+			"summary": { "type": "text", "analyzer": "sudachi_analyzer" }
+		}
+	}
 }
