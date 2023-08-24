@@ -10,7 +10,7 @@
 				},
 				"analyzer": {
 				  	"sudachi_analyzer": {
-						"filter": [],
+						"filter": ["searchfilter"],
 						"tokenizer": "sudachi_tokenizer",
 						"type": "custom"
 				  	}
@@ -29,7 +29,7 @@
 			"courseID": { "type": "keyword" },
 			"title": { "type": "text", "analyzer": "sudachi_analyzer" },
 			"credit": { "type": "float" },
-			"minGrade": { "type": "integer" },
+			"grade": { "type": "integer" },
 			"timetable": { "type": "text", "analyzer": "sudachi_analyzer" },
 			"books": { "type": "text", "analyzer": "sudachi_analyzer" },
 			"className": { "type": "text", "analyzer": "sudachi_analyzer" },
@@ -38,8 +38,8 @@
 			"seeAlsoSubject": {
 				"type": "nested",
 				"properties": {
-					"CourseID": { "type": "keyword" },
-					"Title": { "type": "text", "analyzer": "sudachi_analyzer" }
+					"courseID": { "type": "keyword" },
+					"title": { "type": "text", "analyzer": "sudachi_analyzer" }
 				}
 			},
 			"summary": { "type": "text", "analyzer": "sudachi_analyzer" }
