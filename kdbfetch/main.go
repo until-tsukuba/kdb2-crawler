@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"io"
 )
-const prefix = "https://kdb.tsukuba.ac.jp/syllabi/2022/%s/jpn"
+const prefix = "https://kdb.tsukuba.ac.jp/syllabi/2023/%s/jpn"
 
 func main() {
 	app := &cli.App{
