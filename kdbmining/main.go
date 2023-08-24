@@ -35,7 +35,7 @@ type Subject struct {
 func getCourseID(doc *html.Node) (string, error) {
 	id, err := htmlquery.Query(doc, "/html/body/h1[@id='course-title']/span[@id='course']/text()")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "err: %s", err)
+		fmt.Fprintf(os.Stderr, "getCourseID() err: %s", err)
 		return "", err
 	}
 	return id.Data, err
@@ -88,12 +88,10 @@ func main() {
 		return
 	}
 
-	grade_str := strings.Fields(
-		strings.TrimSpace(
-			strings.TrimRight(grade.Data, ","),
-		),
-	)
-	grade_int, err := strconv.ParseInt(grade_str[0], 10, 32)
+	grade_str := strings.TrimSpace(
+		strings.TrimRight(grade.Data, ","),
+	)[0:1]
+	grade_int, err := strconv.ParseInt(grade_str, 10, 32)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "err: %s", err)
 		return
