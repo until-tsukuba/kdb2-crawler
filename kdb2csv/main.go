@@ -32,7 +32,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("url: %s\n", resp.Request.URL)
+	//fmt.Printf("url: %s\n", resp.Request.URL)
 	courseResp, err := searchCourse(client, resp.Request.URL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "searchCourse: %v", err)
