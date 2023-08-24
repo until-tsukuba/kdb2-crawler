@@ -93,7 +93,6 @@ func main() {
 			strings.TrimRight(grade.Data, ","),
 		),
 	)
-	fmt.Println(grade_str)
 	grade_int, err := strconv.ParseInt(grade_str[0], 10, 32)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "err: %s", err)
