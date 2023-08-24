@@ -34,7 +34,7 @@ type Subject struct {
 
 func main() {
 	cfg := elasticsearch.Config{
-		Addresses: []string{"https://localhost:9200"},
+		Addresses: []string{"http://localhost:9200"},
 	}
 
 	es, err := elasticsearch.NewClient(cfg)
