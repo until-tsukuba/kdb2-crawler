@@ -38,6 +38,10 @@ func getCourseID(doc *html.Node) (string, error) {
 		fmt.Fprintf(os.Stderr, "getCourseID() err: %s", err)
 		return "", err
 	}
+	if id == nil {
+		fmt.Fprintf(os.Stderr, "getCourseID() err: it will seem not found")
+		os.Exit(1)
+	}
 	return id.Data, err
 }
 
