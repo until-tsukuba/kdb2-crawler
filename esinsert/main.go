@@ -65,5 +65,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Document indexed successfully: %v\n", id.String())
+	fmt.Fprintf(os.Stderr, "Document indexed successfully: %v\n", id.String())
 }
