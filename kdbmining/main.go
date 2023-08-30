@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"golang.org/x/text/unicode/norm"
@@ -12,29 +14,33 @@ import (
 )
 
 type SubjectRef struct {
-	CourseID string
-	Title string
+	CourseID string `json:"courseID"`
+	Title    string `json:"title"`
 }
 
 type Subject struct {
-	CourseID string
-	Title string
-	Credit string
-	Grade string
-	Timetable string
-	Books []string
-	ClassName []string
-	PlanPretopics string
-	Keywords []string
-	SeeAlsoSubject []*SubjectRef
-	Summary string
+	CourseID       string        `json:"courseID"`
+	Title          string        `json:"title"`
+	Credit         float32       `json:"credit"`
+	Grade          int           `json:"grade"`
+	Timetable      string        `json:"timeTable"`
+	Books          []string      `json:"books"`
+	ClassName      []string      `json:"className"`
+	PlanPretopics  string        `json:"planPretopics"`
+	Keywords       []string      `json:"keywords"`
+	SeeAlsoSubject []*SubjectRef `json:"seeAlsoSubject"`
+	Summary        string        `json:"summary"`
 }
 
 func getCourseID(doc *html.Node) (string, error) {
 	id, err := htmlquery.Query(doc, "/html/body/h1[@id='course-title']/span[@id='course']/text()")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "err: %s", err)
+		fmt.Fprintf(os.Stderr, "getCourseID() err: %s", err)
 		return "", err
+	}
+	if id == nil {
+		fmt.Fprintf(os.Stderr, "getCourseID() err: it will seem not found")
+		os.Exit(1)
 	}
 	return id.Data, err
 }
@@ -44,13 +50,13 @@ func main() {
 	doc, _ := htmlquery.Parse(os.Stdin)
 
 	/*
-	node, err := htmlquery.Query(doc, "/html/body/h1[@id='course-title']/span[@id='title']/text()")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "err: %s", err)
-		return
-	}
-	fmt.Println(node.Data)
-	 */
+		node, err := htmlquery.Query(doc, "/html/body/h1[@id='course-title']/span[@id='title']/text()")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "err: %s", err)
+			return
+		}
+		fmt.Println(node.Data)
+	*/
 	subject := new(Subject)
 
 	subject.CourseID, err = getCourseID(doc)
@@ -72,18 +78,29 @@ func main() {
 		fmt.Fprintf(os.Stderr, "err: %s", err)
 		return
 	}
-	subject.Credit = strings.TrimSpace(
-		strings.TrimRight(credit.Data, ","),
+	credit_str := strings.Fields(
+		strings.TrimSpace(
+			strings.TrimRight(credit.Data, ","),
+		),
 	)
+	credit_float, err := strconv.ParseFloat(credit_str[0], 32)
+	subject.Credit = float32(credit_float)
 
 	grade, err := htmlquery.Query(doc, "/html/body/div[@id='credit-grade-assignments']/p/span[@id='grade']/text()")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "err: %s", err)
 		return
 	}
-	subject.Grade = strings.TrimSpace(
+
+	grade_str := strings.TrimSpace(
 		strings.TrimRight(grade.Data, ","),
-	)
+	)[0:1]
+	grade_int, err := strconv.ParseInt(grade_str, 10, 32)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "err: %s", err)
+		return
+	}
+	subject.Grade = int(grade_int)
 
 	timetable, err := htmlquery.Query(doc, "/html/body/div[@id='credit-grade-assignments']/p/span[@id='timetable']/text()")
 	if err != nil {
@@ -174,6 +191,10 @@ func main() {
 		fmt.Fprintf(os.Stderr, "err: %s", err)
 		return
 	}
-	subject.Summary = summary.Data
-	fmt.Println(subject)
+	subject.Summary = strings.TrimSpace(summary.Data)
+	if err := json.NewEncoder(os.Stdout).Encode(subject); err != nil {
+		fmt.Fprintf(os.Stderr, "err: %s", err)
+		return
+	}
+	//fmt.Println(subject)
 }

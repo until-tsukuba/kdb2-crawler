@@ -14,43 +14,46 @@ import (
 	"golang.org/x/text/transform"
 )
 
+const USER_AGENT = "kdb2-crawler (+https://github.com/until-tsukuba/kdb2-crawler)"
+
 func main() {
 	client := new(http.Client)
-	client.Jar, _ =  cookiejar.New(nil)
+	client.Jar, _ = cookiejar.New(nil)
 
 	req, _ := http.NewRequest(
 		"GET",
 		"https://kdb.tsukuba.ac.jp/",
 		nil,
 	)
+	req.Header.Set("User-Agent", USER_AGENT)
 	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		fmt.Fprintf(os.Stderr, "initial req: %v", err)
-		return;
+		return
 	}
 
-	fmt.Printf("url: %s\n", resp.Request.URL)
+	//fmt.Printf("url: %s\n", resp.Request.URL)
 	courseResp, err := searchCourse(client, resp.Request.URL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "searchCourse: %v", err)
-		return;
+		return
 	}
 	csvResp, err := downloadCSV(client, courseResp.Request.URL)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "downloadCSV: %v", err)
-		return;
+		return
 	}
 
 	sjisReader := transform.NewReader(csvResp.Body, japanese.ShiftJIS.NewDecoder())
 	tee := io.TeeReader(sjisReader, os.Stdout)
 	s := bufio.NewScanner(tee)
-	for s.Scan() {}
+	for s.Scan() {
+	}
 
 	if err := s.Err(); err != nil {
 		fmt.Fprintf(os.Stderr, "%v", err)
 		return
 	}
-
 
 }
 
